@@ -1,0 +1,54 @@
+// This tells Prisma to generate the client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// This tells Prisma where your Postgres DB is
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Email batch model
+model EmailBatch {
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  startTime   DateTime
+  delayMs     Int
+  hourlyLimit Int
+  totalEmails Int
+  status      BatchStatus @default(PENDING)
+
+  emails      Email[]
+}
+
+// Single email model
+model Email {
+  id          String      @id @default(cuid())
+  batchId     String
+  batch       EmailBatch  @relation(fields: [batchId], references: [id])
+
+  to          String
+  subject     String
+  body        String
+
+  scheduledAt DateTime
+  sentAt      DateTime?
+  status      EmailStatus @default(SCHEDULED)
+  error       String?
+
+  createdAt   DateTime    @default(now())
+}
+
+// Enums for status
+enum EmailStatus {
+  SCHEDULED
+  SENT
+  FAILED
+}
+
+enum BatchStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+}

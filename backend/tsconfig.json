@@ -1,0 +1,19 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "dist",
+
+    "strict": true,
+    "moduleResolution": "node",
+
+    // These two lines fix the Express import issue
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
